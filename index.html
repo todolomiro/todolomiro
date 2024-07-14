@@ -60,7 +60,13 @@
             var streamUrl = getParameterByName('stream');
             if (streamUrl) {
                 var iframe = document.getElementById('dynamicIframe');
-                iframe.src = 'https://' + streamUrl;
+                iframe.src = streamUrl.startsWith('http') ? streamUrl : 'https://' + streamUrl;
+            }
+
+            var chatChannel = getParameterByName('chat');
+            if (chatChannel) {
+                var chatIframe = document.getElementById('chat_embed');
+                chatIframe.src = 'https://www.twitch.tv/embed/' + chatChannel + '/chat?parent=todolomiro.dev.ar';
             }
         }
     </script>
@@ -72,12 +78,7 @@
         </div>
     </div>
     <div class="columna columna-20">
-        <iframe
-  id="chat_embed"
-  src="https://www.twitch.tv/embed/todolomirotv/chat?parent=todolomiro.dev.ar"
-  height="100%"
-  width="100%">
-</iframe>
+        <iframe id="chat_embed" src="https://www.twitch.tv/embed/todolomirotv/chat?parent=todolomiro.dev.ar" height="100%" width="100%"></iframe>
     </div>
 </body>
 </html>
