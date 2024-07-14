@@ -1,1 +1,44 @@
-HOLA MUNDO 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de ejemplo</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .columna {
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .columna-80 {
+            flex: 0 0 80%;
+            background-color: #f0f0f0;
+        }
+        .columna-20 {
+            flex: 0 0 20%;
+            background-color: #d0d0d0;
+        }
+        @media (max-width: 768px) {
+            .columna-80, .columna-20 {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="columna columna-80">
+        <h1>Columna Principal</h1>
+        <p>Esta es la columna que ocupa el 80% del ancho de la página.</p>
+    </div>
+    <div class="columna columna-20">
+        <h1>Columna Secundaria</h1>
+        <p>Esta es la columna que ocupa el 20% del ancho de la página.</p>
+    </div>
+</body>
+</html>
