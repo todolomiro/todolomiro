@@ -117,11 +117,11 @@
                 var chatIframe = document.getElementById('chat_embed');
                 var chatSrc;
                 if (platform === 'youtube') {
-                    chatSrc = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=YOUR_DOMAIN`;
+                    chatSrc = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
                 } else if (platform === 'kick') {
                     chatSrc = `https://kick.com/embed/chat/${chatChannel}`;
                 } else {
-                    chatSrc = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=YOUR_DOMAIN`;
+                    chatSrc = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=todolomiro.dev.ar`;
                 }
                 chatIframe.src = chatSrc;
             }
