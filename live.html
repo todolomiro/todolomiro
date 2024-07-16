@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM7W2BEMD1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YM7W2BEMD1');
+    </script>
+    <title></title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+        }
+        .columna {
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        .columna-80 {
+            flex: 0 0 75%;
+            background-color: #f0f0f0;
+        }
+        .columna-20 {
+            flex: 0 0 25%;
+            background-color: #d0d0d0;
+            height: 100vh;
+        }
+        @media (max-width: 768px) {
+            .columna-80, .columna-20 {
+                flex: 0 0 100%;
+            }
+        }
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            max-width: 250px;
+            max-height: 50px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 10px;
+        }
+        .stream-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .stream-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        function setIframeAttributes(iframe, sandboxEnabled) {
+            if (sandboxEnabled) {
+                iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
+            } else {
+                iframe.removeAttribute('sandbox');
+            }
+        }
+
+        window.onload = function() {
+            // Set page title
+            var pageTitle = getParameterByName('titulo');
+            if (pageTitle) {
+                document.title = pageTitle;
+            }
+
+            // Set logo
+            var logoUrl = getParameterByName('logo');
+            var logoImg = document.getElementById('logo');
+            if (logoUrl) {
+                logoImg.src = logoUrl;
+            }
+
+            // Set chat iframe
+            var chatChannel = getParameterByName('chat');
+            if (chatChannel) {
+                var platform = getParameterByName('platform');
+                var chatIframe = document.getElementById('chat_embed');
+                var chatSrc;
+                if (platform === 'youtube') {
+                    chatSrc = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=YOUR_DOMAIN`;
+                } else if (platform === 'kick') {
+                    chatSrc = `https://kick.com/embed/chat/${chatChannel}`;
+                } else {
+                    chatSrc = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=YOUR_DOMAIN`;
+                }
+                chatIframe.src = chatSrc;
+            }
+
+            // Set stream iframes and buttons
+            var streamUrls = [];
+            var streamNames = [];
+            var sandboxValues = [];
+            for (var i = 1; i <= 6; i++) {
+                var streamUrl = getParameterByName('stream-url' + i);
+                var streamName = getParameterByName('name' + i);
+                var sandboxValue = getParameterByName('sandbox' + i);
+                if (streamUrl && streamName) {
+                    streamUrls.push(streamUrl);
+                    streamNames.push(streamName);
+                    sandboxValues.push(sandboxValue === 'on');
+                }
+            }
+
+            var buttonContainer = document.getElementById('button-container');
+            var iframe = document.getElementById('dynamicIframe');
+            if (streamUrls.length > 0) {
+                iframe.src = streamUrls[0];
+                setIframeAttributes(iframe, sandboxValues[0]);
+                for (var j = 0; j < streamUrls.length; j++) {
+                    var button = document.createElement('button');
+                    button.className = 'stream-button';
+                    button.innerText = streamNames[j];
+                    button.onclick = (function(url, sandboxEnabled) {
+                        return function() {
+                            iframe.src = url;
+                            setIframeAttributes(iframe, sandboxEnabled);
+                        };
+                    })(streamUrls[j], sandboxValues[j]);
+                    buttonContainer.appendChild(button);
+                }
+            }
+
+            // Set custom script
+            var customScriptContent = getParameterByName('script');
+            if (customScriptContent) {
+                var scriptTag = document.createElement('script');
+                scriptTag.textContent = customScriptContent;
+                document.body.appendChild(scriptTag);
+            }
+        }
+    </script>
+</head>
+<body>
+    <img id="logo" class="logo" src="logo.png" alt="Logo">
+    <div class="columna columna-80">
+        <div class="button-container" id="button-container"></div>
+        <div class="iframe-container">
+            <iframe id="dynamicIframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+    <div class="columna columna-20">
+        <iframe id="chat_embed" src="https://www.twitch.tv/embed/todolomirotv/chat?parent=todolomiro.dev.ar" height="100%" width="100%"></iframe>
+    </div>
+</body>
+</html>
