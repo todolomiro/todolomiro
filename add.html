@@ -22,6 +22,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             width: 100%;
+            height: 100%;
         }
         .form-group {
             margin-bottom: 15px;
@@ -94,39 +95,39 @@
     <div class="container">
         <form method="get" action="otra_pagina.html">
             <div class="form-group">
-                <label for="titulo">titulo</label>
-                <input type="text" id="titulo" name="titulo" required>
+                <label for="titulo">Page title</label>
+                <input type="text" id="title" name="titulo" required>
             </div>
             <div class="form-group">
-                <label for="chat">chat</label>
+                <label for="chat">Chat</label>
                 <div class="inline-group">
                     <input type="text" id="chat" name="chat">
                     <select id="platform" name="platform">
-                        <option value="youtube">youtube</option>
-                        <option value="twitch">twitch</option>
-                        <option value="kick">kick</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="twitch">Twitch</option>
+                        <option value="kick">Kick</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <label for="name">name</label>
+                <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group" id="stream-urls">
                 <div class="inline-group">
                     <label for="stream-url1">Stream URL 1</label>
                     <input type="text" id="stream-url1" name="stream-url1" required>
-                    <label for="sandbox1">sandbox</label>
+                    <label for="sandbox1">Sandbox</label>
                     <input type="checkbox" id="sandbox1" name="sandbox1" checked>
                 </div>
             </div>
-            <button type="button" onclick="addStreamUrl()">add more</button>
+            <button type="button" onclick="addStreamUrl()">Add more</button>
             <div class="form-group">
-                <label for="logo">logo</label>
+                <label for="logo">Logo</label>
                 <input type="text" id="logo" name="logo">
             </div>
             <div class="form-group">
-                <label for="script">script</label>
+                <label for="script">Script</label>
                 <textarea id="script" name="script" rows="4"></textarea>
             </div>
             <button type="submit">Submit</button>
