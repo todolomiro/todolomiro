@@ -67,6 +67,9 @@
             width: auto;
             flex-shrink: 0;
         }
+        .inline-group label {
+            margin-right: 10px;
+        }
     </style>
     <script>
         let streamCount = 1;
@@ -75,7 +78,7 @@
             if (streamCount < 6) {
                 streamCount++;
                 const newStreamUrl = document.createElement('div');
-                newStreamUrl.className = 'form-group';
+                newStreamUrl.className = 'form-group inline-group';
                 newStreamUrl.innerHTML = `
                     <label for="stream-url${streamCount}">Stream URL ${streamCount}</label>
                     <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required>
@@ -110,7 +113,7 @@
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group" id="stream-urls">
-                <div>
+                <div class="inline-group">
                     <label for="stream-url1">Stream URL 1</label>
                     <input type="text" id="stream-url1" name="stream-url1" required>
                     <label for="sandbox1">sandbox</label>
