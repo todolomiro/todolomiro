@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+        }
+        .column {
+            margin-right: 20px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        let streamCount = 1;
+
+        function addStreamUrl() {
+            if (streamCount < 6) {
+                streamCount++;
+                const newStreamUrl = document.createElement('div');
+                newStreamUrl.className = 'form-group';
+                newStreamUrl.innerHTML = `
+                    <label for="stream-url${streamCount}">stream url</label>
+                    <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required>
+                    <label for="sandbox${streamCount}">sandbox</label>
+                    <input type="checkbox" id="sandbox${streamCount}" name="sandbox${streamCount}" checked>
+                `;
+                document.getElementById('stream-urls').appendChild(newStreamUrl);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="column">
+            <div class="form-group">
+                <label for="titulo">titulo</label>
+                <input type="text" id="titulo" name="titulo" required>
+            </div>
+            <div class="form-group">
+                <label for="chat">chat</label>
+                <input type="text" id="chat" name="chat">
+                <select id="platform" name="platform">
+                    <option value="youtube">youtube</option>
+                    <option value="twitch">twitch</option>
+                    <option value="kick">kick</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group" id="stream-urls">
+                <div>
+                    <label for="stream-url1">stream url</label>
+                    <input type="text" id="stream-url1" name="stream-url1" required>
+                    <label for="sandbox1">sandbox</label>
+                    <input type="checkbox" id="sandbox1" name="sandbox1" checked>
+                </div>
+            </div>
+            <button type="button" onclick="addStreamUrl()">add more</button>
+            <div class="form-group">
+                <label for="logo">logo</label>
+                <input type="text" id="logo" name="logo">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
