@@ -6,12 +6,12 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM7W2BEMD1"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-YM7W2BEMD1');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YM7W2BEMD1');
     </script>
-    <title></title>
+    <title id="page-title">Todo lo miro</title>
     <style>
         body {
             display: flex;
@@ -53,28 +53,27 @@
             height: 100%;
             border: 0;
         }
-        .logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            max-width: 250px;
-            max-height: 50px;
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background-color: #333;
         }
-        .button-container {
-            text-align: center;
-            margin: 10px;
-        }
-        .stream-button {
+        .buttons-container button {
+            margin: 0 5px;
+            padding: 10px;
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px;
-            margin: 5px;
             border-radius: 5px;
             cursor: pointer;
         }
-        .stream-button:hover {
+        .buttons-container button:hover {
             background-color: #0056b3;
+        }
+        .logo {
+            max-width: 250px;
+            max-height: 50px;
         }
     </style>
     <script>
@@ -88,92 +87,82 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        function setIframeAttributes(iframe, sandboxEnabled) {
-            if (sandboxEnabled) {
-                iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
-            } else {
-                iframe.removeAttribute('sandbox');
-            }
-        }
-
         window.onload = function() {
             // Set page title
             var pageTitle = getParameterByName('titulo');
             if (pageTitle) {
                 document.title = pageTitle;
+                document.getElementById('page-title').textContent = pageTitle;
             }
 
             // Set logo
             var logoUrl = getParameterByName('logo');
-            var logoImg = document.getElementById('logo');
+            var logoImg = document.createElement('img');
+            logoImg.className = 'logo';
             if (logoUrl) {
                 logoImg.src = logoUrl;
+            } else {
+                logoImg.src = 'logo.png';
             }
+            document.body.insertBefore(logoImg, document.body.firstChild);
 
-            // Set chat iframe
+            // Set chat
             var chatChannel = getParameterByName('chat');
             if (chatChannel) {
                 var platform = getParameterByName('platform');
                 var chatIframe = document.getElementById('chat_embed');
-                var chatSrc;
                 if (platform === 'youtube') {
-                    chatSrc = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
+                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
                 } else if (platform === 'kick') {
-                    chatSrc = `https://kick.com/embed/chat/${chatChannel}`;
+                    chatIframe.src = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
                 } else {
-                    chatSrc = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=todolomiro.dev.ar`;
+                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=todolomiro.dev.ar`;
                 }
-                chatIframe.src = chatSrc;
             }
 
-            // Set stream iframes and buttons
-            var streamUrls = [];
-            var streamNames = [];
-            var sandboxValues = [];
-            for (var i = 1; i <= 6; i++) {
-                var streamUrl = getParameterByName('stream-url' + i);
-                var streamName = getParameterByName('name' + i);
-                var sandboxValue = getParameterByName('sandbox' + i);
+            // Set streams
+            var buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'buttons-container';
+            document.body.insertBefore(buttonsContainer, document.body.firstChild.nextSibling);
+
+            for (let i = 1; i <= 6; i++) {
+                var streamUrl = getParameterByName(`stream-url${i}`);
+                var streamName = getParameterByName(`name${i}`);
+                var sandbox = getParameterByName(`sandbox${i}`) !== null;
+
                 if (streamUrl && streamName) {
-                    streamUrls.push(streamUrl);
-                    streamNames.push(streamName);
-                    sandboxValues.push(sandboxValue === 'on');
-                }
-            }
-
-            var buttonContainer = document.getElementById('button-container');
-            var iframe = document.getElementById('dynamicIframe');
-            if (streamUrls.length > 0) {
-                iframe.src = streamUrls[0];
-                setIframeAttributes(iframe, sandboxValues[0]);
-                for (var j = 0; j < streamUrls.length; j++) {
                     var button = document.createElement('button');
-                    button.className = 'stream-button';
-                    button.innerText = streamNames[j];
-                    button.onclick = (function(url, sandboxEnabled) {
-                        return function() {
-                            iframe.src = url;
-                            setIframeAttributes(iframe, sandboxEnabled);
-                        };
-                    })(streamUrls[j], sandboxValues[j]);
-                    buttonContainer.appendChild(button);
+                    button.textContent = streamName;
+                    button.onclick = function() {
+                        var iframe = document.getElementById('dynamicIframe');
+                        iframe.src = streamUrl.startsWith('http') ? streamUrl : 'https://' + streamUrl;
+                        if (sandbox) {
+                            iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
+                        } else {
+                            iframe.removeAttribute('sandbox');
+                        }
+                    };
+                    buttonsContainer.appendChild(button);
+
+                    // Set the first stream as default
+                    if (i === 1) {
+                        button.click();
+                    }
                 }
             }
 
-            // Set custom script
-            var customScriptContent = getParameterByName('script');
-            if (customScriptContent) {
+            // Set script
+            var scriptContent = getParameterByName('script');
+            if (scriptContent) {
                 var scriptTag = document.createElement('script');
-                scriptTag.textContent = customScriptContent;
+                scriptTag.textContent = scriptContent;
                 document.body.appendChild(scriptTag);
             }
         }
     </script>
 </head>
 <body>
-    <img id="logo" class="logo" src="logo.png" alt="Logo">
     <div class="columna columna-80">
-        <div class="button-container" id="button-container"></div>
         <div class="iframe-container">
             <iframe id="dynamicIframe" src="" frameborder="0"></iframe>
         </div>
