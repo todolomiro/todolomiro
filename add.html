@@ -6,16 +6,54 @@
     <title>Home Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            display: flex;
-        }
-        .column {
-            margin-right: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
         }
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input[type="checkbox"] {
+            margin-left: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
     <script>
@@ -39,7 +77,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="column">
+        <form method="get" action="otra_pagina.html">
             <div class="form-group">
                 <label for="titulo">titulo</label>
                 <input type="text" id="titulo" name="titulo" required>
@@ -70,7 +108,12 @@
                 <label for="logo">logo</label>
                 <input type="text" id="logo" name="logo">
             </div>
-        </div>
+            <div class="form-group">
+                <label for="script">script</label>
+                <textarea id="script" name="script" rows="4"></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
     </div>
 </body>
 </html>
