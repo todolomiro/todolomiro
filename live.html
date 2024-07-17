@@ -84,7 +84,7 @@
             background-color: #0056b3;
         }
     </style>
-    <script>
+        <script>
         function getParameterByName(name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, '\\$&');
@@ -95,12 +95,12 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        function createIframe(url, sandboxEnabled) {
+        function createIframe(url, sandboxEnabled, scriptContent) {
             const container = document.querySelector('.iframe-container');
             container.innerHTML = ''; // Clear existing iframe
 
             const iframe = document.createElement('iframe');
-            iframe.src = `https://streamlive.chat/frame.html?get=${encodeURIComponent(url)}`;
+            iframe.src = `https://streamlive.chat/frame.html?get=${url}${scriptContent ? '&script=' + encodeURIComponent(scriptContent) : ''}`;
             iframe.frameborder = "0";
             iframe.width = "100%";
             iframe.height = "100%";
@@ -154,17 +154,17 @@
             if (chatChannel) {
                 var platform = params.get('platform');
                 var chatIframe = document.getElementById('chat_embed');
-                var chatUrl;
                 if (platform === 'youtube') {
-                    chatUrl = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=streamlive.chat`;
+                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=streamlive.chat`;
                 } else if (platform === 'kick') {
-                    chatUrl = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
+                    chatIframe.src = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
                 } else {
-                    chatUrl = `https://www.twitch.tv/embed/${chatChannel}/chat?darkpopout&no-mobile-redirect=true&parent=streamlive.chat`;
+                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?darkpopout&no-mobile-redirect=true&parent=streamlive.chat`;
                 }
-                console.log("Chat URL:", chatUrl); // Mostrar URL en la consola
-                chatIframe.src = chatUrl;
             }
+
+            // Get script content
+            var scriptContent = params.get('script');
 
             // Set streams
             for (let i = 1; i <= 6; i++) {
@@ -177,7 +177,7 @@
                     button.textContent = streamName;
                     button.onclick = (function(url, sandboxEnabled) {
                         return function() {
-                            createIframe(url, sandboxEnabled);
+                            createIframe(url, sandboxEnabled, scriptContent);
                         };
                     })(streamUrl, sandbox);
                     buttonsContainer.appendChild(button);
@@ -187,14 +187,6 @@
                         button.click();
                     }
                 }
-            }
-
-            // Set script
-            var scriptContent = params.get('script');
-            if (scriptContent) {
-                var scriptTag = document.createElement('script');
-                scriptTag.textContent = scriptContent;
-                document.body.appendChild(scriptTag);
             }
         }
 
@@ -238,7 +230,7 @@
                 loadStreams(params);
                 createShareButton(encodedData);
             }
-        };
+        }
     </script>
 </head>
 <body>
