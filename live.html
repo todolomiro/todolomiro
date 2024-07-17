@@ -194,7 +194,7 @@
             const shareButton = document.createElement('button');
             shareButton.textContent = 'Copy Link';
             shareButton.onclick = async function() {
-                const url = `https://yourdomain.com/live.html?data=${encodedString}`;
+                const url = `https://streamlive.chat/live.html?data=${encodedString}`;
                 const shortenedUrl = await shortenUrl(url);
                 navigator.clipboard.writeText(shortenedUrl)
                     .then(() => alert('Link copied to clipboard: ' + shortenedUrl))
