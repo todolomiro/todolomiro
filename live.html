@@ -205,7 +205,8 @@
                     .then(() => alert('Link copied to clipboard: ' + shortenedUrl))
                     .catch(err => console.error('Error copying link: ', err));
             };
-            document.body.appendChild(shareButton);
+            const linkContainer = document.getElementById('link');
+            linkContainer.appendChild(shareButton);
         }
 
         async function shortenUrl(longUrl) {
@@ -243,7 +244,7 @@
         <div class="iframe-container">
             <!-- Iframe will be inserted here -->
         </div>
-        <div class="sharethis-inline-share-buttons"></div>
+        <div class="sharethis-inline-share-buttons"></div><div id="link"></div>
 <div id="awn-z8541350"></div>
 <script data-cfasync="false" type="text/javascript">
     var adcashMacros = {};
