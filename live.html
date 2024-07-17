@@ -87,6 +87,14 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
+        function setSandboxAttribute(iframe, sandboxEnabled) {
+            if (sandboxEnabled) {
+                iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
+            } else {
+                iframe.removeAttribute('sandbox');
+            }
+        }
+
         window.onload = function() {
             // Set page title
             var pageTitle = getParameterByName('titulo');
@@ -136,12 +144,10 @@
                     button.onclick = (function(url, sandboxEnabled) {
                         return function() {
                             var iframe = document.getElementById('dynamicIframe');
+                            iframe.onload = function() {
+                                setSandboxAttribute(iframe, sandboxEnabled);
+                            };
                             iframe.src = url.startsWith('http') ? url : 'https://' + url;
-                            if (sandboxEnabled) {
-                                iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
-                            } else {
-                                iframe.removeAttribute('sandbox');
-                            }
                         };
                     })(streamUrl, sandbox);
                     buttonsContainer.appendChild(button);
