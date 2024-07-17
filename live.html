@@ -127,8 +127,10 @@
             var topContainer = document.createElement('div');
             topContainer.className = 'top-container';
 
-            // Set logo
+           // Set logo
             var logoUrl = params.get('logo');
+            var logoLink = document.createElement('a');
+            logoLink.href = '/'; // Enlace a la página principal
             var logoImg = document.createElement('img');
             logoImg.className = 'logo';
             if (logoUrl) {
@@ -136,7 +138,9 @@
             } else {
                 logoImg.src = '/logo.jpg';
             }
-            topContainer.appendChild(logoImg);
+            logoLink.appendChild(logoImg);
+            topContainer.appendChild(logoLink);
+
 
             // Set buttons container
             var buttonsContainer = document.createElement('div');
