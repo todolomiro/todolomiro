@@ -112,11 +112,11 @@
                 var platform = getParameterByName('platform');
                 var chatIframe = document.getElementById('chat_embed');
                 if (platform === 'youtube') {
-                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=streamlive.chat`;
+                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
                 } else if (platform === 'kick') {
                     chatIframe.src = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
                 } else {
-                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=streamlive.chat`;
+                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=todolomiro.dev.ar`;
                 }
             }
 
@@ -133,15 +133,17 @@
                 if (streamUrl && streamName) {
                     var button = document.createElement('button');
                     button.textContent = streamName;
-                    button.onclick = function() {
-                        var iframe = document.getElementById('dynamicIframe');
-                        iframe.src = streamUrl.startsWith('http') ? streamUrl : 'https://' + streamUrl;
-                        if (sandbox) {
-                            iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
-                        } else {
-                            iframe.removeAttribute('sandbox');
-                        }
-                    };
+                    button.onclick = (function(url, sandboxEnabled) {
+                        return function() {
+                            var iframe = document.getElementById('dynamicIframe');
+                            iframe.src = url.startsWith('http') ? url : 'https://' + url;
+                            if (sandboxEnabled) {
+                                iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
+                            } else {
+                                iframe.removeAttribute('sandbox');
+                            }
+                        };
+                    })(streamUrl, sandbox);
                     buttonsContainer.appendChild(button);
 
                     // Set the first stream as default
@@ -168,7 +170,7 @@
         </div>
     </div>
     <div class="columna columna-20">
-        <iframe id="chat_embed" src="https://www.twitch.tv/embed/streamlive.chat/chat?parent=todolomiro.dev.ar" height="100%" width="100%"></iframe>
+        <iframe id="chat_embed" src="https://www.twitch.tv/embed/todolomirotv/chat?parent=todolomiro.dev.ar" height="100%" width="100%"></iframe>
     </div>
 </body>
 </html>
