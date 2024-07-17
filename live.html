@@ -179,11 +179,13 @@
 
         function createShareButton(encodedString) {
             const shareButton = document.createElement('button');
-            shareButton.textContent = 'Share';
+            shareButton.textContent = 'Copy Link';
             shareButton.onclick = async function() {
                 const url = `https://yourdomain.com/live.html?data=${encodedString}`;
                 const shortenedUrl = await shortenUrl(url);
-                alert(`Shortened URL: ${shortenedUrl}`);
+                navigator.clipboard.writeText(shortenedUrl)
+                    .then(() => alert('Link copied to clipboard: ' + shortenedUrl))
+                    .catch(err => console.error('Error copying link: ', err));
             };
             document.body.appendChild(shareButton);
         }
