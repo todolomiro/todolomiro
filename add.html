@@ -58,18 +58,16 @@
         }
         .inline-group {
             display: flex;
-            align-items: center;
-        }
-        .inline-group input[type="text"] {
-            flex: 1;
-            margin-right: 10px;
-        }
-        .inline-group select {
-            width: auto;
-            flex-shrink: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
         .inline-group label {
-            margin-right: 10px;
+            margin-bottom: 0;
         }
     </style>
     <script>
@@ -119,7 +117,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group inline-group">
                 <label for="name1">Name 1</label>
                 <input type="text" id="name1" name="name1" required>
                 <label for="stream-url1">Stream URL 1</label>
