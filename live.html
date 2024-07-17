@@ -87,12 +87,19 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        function setSandboxAttribute(iframe, sandboxEnabled) {
+        function createIframe(url, sandboxEnabled) {
+            const container = document.querySelector('.iframe-container');
+            container.innerHTML = ''; // Clear existing iframe
+
+            const iframe = document.createElement('iframe');
+            iframe.src = url.startsWith('http') ? url : 'https://' + url;
+            iframe.frameborder = "0";
+            iframe.width = "100%";
+            iframe.height = "100%";
             if (sandboxEnabled) {
-                iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
-            } else {
-                iframe.removeAttribute('sandbox');
+                iframe.sandbox = "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation";
             }
+            container.appendChild(iframe);
         }
 
         window.onload = function() {
@@ -143,11 +150,7 @@
                     button.textContent = streamName;
                     button.onclick = (function(url, sandboxEnabled) {
                         return function() {
-                            var iframe = document.getElementById('dynamicIframe');
-                            iframe.onload = function() {
-                                setSandboxAttribute(iframe, sandboxEnabled);
-                            };
-                            iframe.src = url.startsWith('http') ? url : 'https://' + url;
+                            createIframe(url, sandboxEnabled);
                         };
                     })(streamUrl, sandbox);
                     buttonsContainer.appendChild(button);
@@ -172,7 +175,7 @@
 <body>
     <div class="columna columna-80">
         <div class="iframe-container">
-            <iframe id="dynamicIframe" src="" frameborder="0"></iframe>
+            <!-- Iframe will be inserted here -->
         </div>
     </div>
     <div class="columna columna-20">
