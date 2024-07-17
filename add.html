@@ -52,6 +52,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            margin-right: 5px;
         }
         button:hover {
             background-color: #0056b3;
@@ -66,8 +67,17 @@
             border-radius: 5px;
             border: 1px solid #ddd;
         }
-        .inline-group label {
-            margin-bottom: 0;
+        .inline-fields {
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+        .inline-fields input[type="text"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .inline-fields input[type="checkbox"] {
+            margin-right: 10px;
         }
     </style>
     <script>
@@ -81,13 +91,27 @@
                 newStreamUrl.innerHTML = `
                     <label for="name${streamCount}">Name ${streamCount}</label>
                     <input type="text" id="name${streamCount}" name="name${streamCount}" required>
-                    <label for="stream-url${streamCount}">Stream URL ${streamCount}</label>
-                    <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required>
-                    <label for="sandbox${streamCount}">Sandbox</label>
-                    <input type="checkbox" id="sandbox${streamCount}" name="sandbox${streamCount}" checked>
+                    <div class="inline-fields">
+                        <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required placeholder="Stream URL ${streamCount}">
+                        <label for="sandbox${streamCount}">Sandbox</label>
+                        <input type="checkbox" id="sandbox${streamCount}" name="sandbox${streamCount}" checked>
+                    </div>
+                    <button type="button" onclick="removeStreamUrl(this)">Delete</button>
                 `;
                 document.getElementById('stream-urls').appendChild(newStreamUrl);
+                toggleDeleteButtons();
             }
+        }
+
+        function removeStreamUrl(button) {
+            button.parentElement.remove();
+            streamCount--;
+            toggleDeleteButtons();
+        }
+
+        function toggleDeleteButtons() {
+            const deleteButtons = document.querySelectorAll('.inline-group button');
+            deleteButtons.forEach(button => button.style.display = streamCount > 1 ? 'inline-block' : 'none');
         }
 
         function encodeFormToBase64() {
@@ -120,22 +144,17 @@
             <div class="form-group inline-group">
                 <label for="name1">Name 1</label>
                 <input type="text" id="name1" name="name1" required>
-                <label for="stream-url1">Stream URL 1</label>
-                <input type="text" id="stream-url1" name="stream-url1" required>
-                <label for="sandbox1">Sandbox</label>
-                <input type="checkbox" id="sandbox1" name="sandbox1" checked>
+                <div class="inline-fields">
+                    <input type="text" id="stream-url1" name="stream-url1" required placeholder="Stream URL 1">
+                    <label for="sandbox1">Sandbox</label>
+                    <input type="checkbox" id="sandbox1" name="sandbox1" checked>
+                </div>
             </div>
             <div class="form-group" id="stream-urls"></div>
-            <button type="button" onclick="addStreamUrl()">Add more</button>
-            <div class="form-group">
-                <label for="logo">Logo</label>
-                <input type="text" id="logo" name="logo">
+            <div>
+                <button type="button" onclick="addStreamUrl()">Add more</button>
+                <button type="submit">Submit</button>
             </div>
-            <div class="form-group">
-                <label for="script">&lt;script&gt;...&lt;/script&gt;</label>
-                <textarea id="script" name="script" rows="4"></textarea>
-            </div>
-            <button type="submit">Submit</button>
         </form>
     </div>
 </body>
