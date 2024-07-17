@@ -153,13 +153,16 @@
             if (chatChannel) {
                 var platform = params.get('platform');
                 var chatIframe = document.getElementById('chat_embed');
+                var chatUrl;
                 if (platform === 'youtube') {
-                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=streamlive.chat`;
+                    chatUrl = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=streamlive.chat`;
                 } else if (platform === 'kick') {
-                    chatIframe.src = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
+                    chatUrl = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
                 } else {
-                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?darkpopout&no-mobile-redirect=true&parent=streamlive.chat`;
+                    chatUrl = `https://www.twitch.tv/embed/${chatChannel}/chat?darkpopout&no-mobile-redirect=true&parent=streamlive.chat`;
                 }
+                console.log("Chat URL:", chatUrl); // Mostrar URL en la consola
+                chatIframe.src = chatUrl;
             }
 
             // Set streams
@@ -234,15 +237,12 @@
                 loadStreams(params);
                 createShareButton(encodedData);
             }
-        }
+        };
     </script>
 </head>
 <body>
     <div class="columna columna-80">
-        <div class="iframe-container">
-            <!-- Iframe will be inserted here -->
-        </div>
-        <div class="sharethis-inline-share-buttons"></div>
+        <div class="iframe-container"></div>
         <div id="link"></div>
         <div id="pzn3xksu"></div>
         <script async src="https://www.advancedpmu.com/js/357976.js"></script>
