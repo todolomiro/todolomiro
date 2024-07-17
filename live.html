@@ -204,21 +204,18 @@
         }
 
         async function shortenUrl(longUrl) {
-            const bitlyAccessToken = 'YOUR_BITLY_ACCESS_TOKEN'; // Replace with your actual Bitly access token
-            const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
-
+            const apiUrl = `https://api.tinyurl.com/create?api_token=YOUR_TINYURL_API_TOKEN`;
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${bitlyAccessToken}`
                 },
-                body: JSON.stringify({ long_url: longUrl })
+                body: JSON.stringify({ url: longUrl })
             });
 
             if (response.ok) {
                 const jsonResponse = await response.json();
-                return jsonResponse.link;
+                return jsonResponse.data.tiny_url;
             } else {
                 console.error('Error shortening URL:', response.status, response.statusText);
                 return longUrl;
