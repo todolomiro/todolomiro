@@ -102,16 +102,22 @@
             container.appendChild(iframe);
         }
 
-        window.onload = function() {
+        function decodeBase64ToParams(encodedString) {
+            const decodedString = atob(encodedString);
+            const params = new URLSearchParams(decodedString);
+            return params;
+        }
+
+        function loadStreams(params) {
             // Set page title
-            var pageTitle = getParameterByName('titulo');
+            var pageTitle = params.get('titulo');
             if (pageTitle) {
                 document.title = pageTitle;
                 document.getElementById('page-title').textContent = pageTitle;
             }
 
             // Set logo
-            var logoUrl = getParameterByName('logo');
+            var logoUrl = params.get('logo');
             var logoImg = document.createElement('img');
             logoImg.className = 'logo';
             if (logoUrl) {
@@ -122,9 +128,9 @@
             document.body.insertBefore(logoImg, document.body.firstChild);
 
             // Set chat
-            var chatChannel = getParameterByName('chat');
+            var chatChannel = params.get('chat');
             if (chatChannel) {
-                var platform = getParameterByName('platform');
+                var platform = params.get('platform');
                 var chatIframe = document.getElementById('chat_embed');
                 if (platform === 'youtube') {
                     chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
@@ -141,9 +147,9 @@
             document.body.insertBefore(buttonsContainer, document.body.firstChild.nextSibling);
 
             for (let i = 1; i <= 6; i++) {
-                var streamUrl = getParameterByName(`stream-url${i}`);
-                var streamName = getParameterByName(`name${i}`);
-                var sandbox = getParameterByName(`sandbox${i}`) !== null;
+                var streamUrl = params.get(`stream-url${i}`);
+                var streamName = params.get(`name${i}`);
+                var sandbox = params.get(`sandbox${i}`) !== null;
 
                 if (streamUrl && streamName) {
                     var button = document.createElement('button');
@@ -163,11 +169,53 @@
             }
 
             // Set script
-            var scriptContent = getParameterByName('script');
+            var scriptContent = params.get('script');
             if (scriptContent) {
                 var scriptTag = document.createElement('script');
                 scriptTag.textContent = scriptContent;
                 document.body.appendChild(scriptTag);
+            }
+        }
+
+        function createShareButton(encodedString) {
+            const shareButton = document.createElement('button');
+            shareButton.textContent = 'Share';
+            shareButton.onclick = async function() {
+                const url = `https://yourdomain.com/live.html?data=${encodedString}`;
+                const shortenedUrl = await shortenUrl(url);
+                alert(`Shortened URL: ${shortenedUrl}`);
+            };
+            document.body.appendChild(shareButton);
+        }
+
+        async function shortenUrl(longUrl) {
+            const bitlyAccessToken = 'YOUR_BITLY_ACCESS_TOKEN'; // Replace with your actual Bitly access token
+            const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${bitlyAccessToken}`
+                },
+                body: JSON.stringify({ long_url: longUrl })
+            });
+
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                return jsonResponse.link;
+            } else {
+                console.error('Error shortening URL:', response.status, response.statusText);
+                return longUrl;
+            }
+        }
+
+        window.onload = function() {
+            const encodedData = getParameterByName('data');
+            if (encodedData) {
+                const params = decodeBase64ToParams(encodedData);
+                loadStreams(params);
+                createShareButton(encodedData);
             }
         }
     </script>
