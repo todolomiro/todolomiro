@@ -151,11 +151,18 @@
                 </div>
             </div>
             <div class="form-group" id="stream-urls"></div>
-            <div>
-                <button type="button" onclick="addStreamUrl()">Add more</button>
-                <button type="submit">Submit</button>
+            <button type="button" onclick="addStreamUrl()">Add more</button>
+            <div class="form-group">
+                <label for="logo">Logo</label>
+                <input type="text" id="logo" name="logo">
             </div>
+            <div class="form-group">
+                <label for="script">&lt;script&gt;...&lt;/script&gt;</label>
+                <textarea id="script" name="script" rows="4"></textarea>
+            </div>
+            <button type="submit">Submit</button>
         </form>
     </div>
 </body>
 </html>
+
