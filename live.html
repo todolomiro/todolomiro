@@ -3,139 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM7W2BEMD1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YM7W2BEMD1');
+    </script>
+    <title id="page-title">Todo lo miro</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 20px;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+        }
+        .columna {
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        .columna-80 {
+            flex: 0 0 75%;
+            background-color: #f0f0f0;
+        }
+        .columna-20 {
+            flex: 0 0 25%;
+            background-color: #d0d0d0;
             height: 100vh;
         }
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+        @media (max-width: 768px) {
+            .columna-80, .columna-20 {
+                flex: 0 0 100%;
+            }
+        }
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            border: 0;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        input[type="text"],
-        textarea,
-        select {
-            width: 100%;
+        .buttons-container {
+            display: flex;
+            justify-content: center;
             padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            background-color: #333;
         }
-        input[type="checkbox"] {
-            margin-left: 10px;
-        }
-        button {
+        .buttons-container button {
+            margin: 0 5px;
+            padding: 10px;
             background-color: #007bff;
-            color: #ffffff;
-            padding: 10px 15px;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
         }
-        button:hover {
+        .buttons-container button:hover {
             background-color: #0056b3;
         }
-        .inline-group {
-            display: flex;
-            align-items: center;
-        }
-        .inline-group input[type="text"] {
-            flex: 1;
-            margin-right: 10px;
-        }
-        .inline-group select {
-            width: auto;
-            flex-shrink: 0;
-        }
-        .inline-group label {
-            margin-right: 10px;
+        .logo {
+            max-width: 250px;
+            max-height: 50px;
         }
     </style>
     <script>
-        let streamCount = 1;
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
 
-        function addStreamUrl() {
-            if (streamCount < 6) {
-                streamCount++;
-                const newStreamUrl = document.createElement('div');
-                newStreamUrl.className = 'form-group';
-                newStreamUrl.innerHTML = `
-                    <label for="name${streamCount}">Name ${streamCount}</label>
-                    <input type="text" id="name${streamCount}" name="name${streamCount}" required>
-                    <div class="inline-group">
-                        <label for="stream-url${streamCount}">Stream URL ${streamCount}</label>
-                        <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required>
-                        <label for="sandbox${streamCount}">Sandbox</label>
-                        <input type="checkbox" id="sandbox${streamCount}" name="sandbox${streamCount}" checked>
-                    </div>
-                `;
-                document.getElementById('stream-urls').appendChild(newStreamUrl);
+        window.onload = function() {
+            // Set page title
+            var pageTitle = getParameterByName('titulo');
+            if (pageTitle) {
+                document.title = pageTitle;
+                document.getElementById('page-title').textContent = pageTitle;
+            }
+
+            // Set logo
+            var logoUrl = getParameterByName('logo');
+            var logoImg = document.createElement('img');
+            logoImg.className = 'logo';
+            if (logoUrl) {
+                logoImg.src = logoUrl;
+            } else {
+                logoImg.src = 'logo.png';
+            }
+            document.body.insertBefore(logoImg, document.body.firstChild);
+
+            // Set chat
+            var chatChannel = getParameterByName('chat');
+            if (chatChannel) {
+                var platform = getParameterByName('platform');
+                var chatIframe = document.getElementById('chat_embed');
+                if (platform === 'youtube') {
+                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
+                } else if (platform === 'kick') {
+                    chatIframe.src = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
+                } else {
+                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=todolomiro.dev.ar`;
+                }
+            }
+
+            // Set streams
+            var buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'buttons-container';
+            document.body.insertBefore(buttonsContainer, document.body.firstChild.nextSibling);
+
+            for (let i = 1; i <= 6; i++) {
+                var streamUrl = getParameterByName(`stream-url${i}`);
+                var streamName = getParameterByName(`name${i}`);
+                var sandbox = getParameterByName(`sandbox${i}`) !== null;
+
+                if (streamUrl && streamName) {
+                    var button = document.createElement('button');
+                    button.textContent = streamName;
+                    button.onclick = function() {
+                        var iframe = document.getElementById('dynamicIframe');
+                        iframe.src = streamUrl.startsWith('http') ? streamUrl : 'https://' + streamUrl;
+                        if (sandbox) {
+                            iframe.setAttribute('sandbox', 'allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation');
+                        } else {
+                            iframe.removeAttribute('sandbox');
+                        }
+                    };
+                    buttonsContainer.appendChild(button);
+
+                    // Set the first stream as default
+                    if (i === 1) {
+                        button.click();
+                    }
+                }
+            }
+
+            // Set script
+            var scriptContent = getParameterByName('script');
+            if (scriptContent) {
+                var scriptTag = document.createElement('script');
+                scriptTag.textContent = scriptContent;
+                document.body.appendChild(scriptTag);
             }
         }
     </script>
 </head>
 <body>
-    <div class="container">
-        <form method="get" action="live.html">
-            <div class="form-group">
-                <label for="titulo">Page title</label>
-                <input type="text" id="titulo" name="titulo" required>
-            </div>
-            <div class="form-group">
-                <label for="chat">Chat</label>
-                <div class="inline-group">
-                    <input type="text" id="chat" name="chat">
-                    <select id="platform" name="platform">
-                        <option value="youtube">YouTube</option>
-                        <option value="twitch">Twitch</option>
-                        <option value="kick">Kick</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group" id="stream-urls">
-                <div class="form-group">
-                    <label for="name1">Name 1</label>
-                    <input type="text" id="name1" name="name1" required>
-                    <div class="inline-group">
-                        <label for="stream-url1">Stream URL 1</label>
-                        <input type="text" id="stream-url1" name="stream-url1" required>
-                        <label for="sandbox1">Sandbox</label>
-                        <input type="checkbox" id="sandbox1" name="sandbox1" checked>
-                    </div>
-                </div>
-            </div>
-            <button type="button" onclick="addStreamUrl()">Add more</button>
-            <div class="form-group">
-                <label for="logo">Logo</label>
-                <input type="text" id="logo" name="logo">
-            </div>
-            <div class="form-group">
-                <label for="script">&lt;script&gt;...&lt;/script&gt;</label>
-                <textarea id="script" name="script" rows="4"></textarea>
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+    <div class="columna columna-80">
+        <div class="iframe-container">
+            <iframe id="dynamicIframe" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+    <div class="columna columna-20">
+        <iframe id="chat_embed" src="https://www.twitch.tv/embed/todolomirotv/chat?parent=todolomiro.dev.ar" height="100%" width="100%"></iframe>
     </div>
 </body>
 </html>
