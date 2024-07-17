@@ -133,11 +133,11 @@
                 var platform = params.get('platform');
                 var chatIframe = document.getElementById('chat_embed');
                 if (platform === 'youtube') {
-                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=todolomiro.dev.ar`;
+                    chatIframe.src = `https://www.youtube.com/live_chat?v=${chatChannel}&embed_domain=streamlive.chat`;
                 } else if (platform === 'kick') {
                     chatIframe.src = `https://player.kick.com/${chatChannel}/chat?theme=dark`;
                 } else {
-                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=todolomiro.dev.ar`;
+                    chatIframe.src = `https://www.twitch.tv/embed/${chatChannel}/chat?parent=streamlive.chat`;
                 }
             }
 
@@ -229,7 +229,7 @@
         </div>
     </div>
     <div class="columna columna-20">
-        <iframe id="chat_embed" src="https://www.twitch.tv/embed/todolomirotv/chat?parent=todolomiro.dev.ar" height="100%" width="100%"></iframe>
+        <iframe id="chat_embed" src="https://www.twitch.tv/embed/XXXXXX/chat?parent=streamlive.chat" height="100%" width="100%"></iframe>
     </div>
 </body>
 </html>
