@@ -79,28 +79,34 @@
             if (streamCount < 6) {
                 streamCount++;
                 const newStreamUrl = document.createElement('div');
-                newStreamUrl.className = 'form-group';
+                newStreamUrl.className = 'form-group inline-group';
                 newStreamUrl.innerHTML = `
                     <label for="name${streamCount}">Name ${streamCount}</label>
                     <input type="text" id="name${streamCount}" name="name${streamCount}" required>
-                    <div class="inline-group">
-                        <label for="stream-url${streamCount}">Stream URL ${streamCount}</label>
-                        <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required>
-                        <label for="sandbox${streamCount}">Sandbox</label>
-                        <input type="checkbox" id="sandbox${streamCount}" name="sandbox${streamCount}" checked>
-                    </div>
+                    <label for="stream-url${streamCount}">Stream URL ${streamCount}</label>
+                    <input type="text" id="stream-url${streamCount}" name="stream-url${streamCount}" required>
+                    <label for="sandbox${streamCount}">Sandbox</label>
+                    <input type="checkbox" id="sandbox${streamCount}" name="sandbox${streamCount}" checked>
                 `;
                 document.getElementById('stream-urls').appendChild(newStreamUrl);
             }
+        }
+
+        function encodeFormToBase64() {
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+            const params = new URLSearchParams(formData).toString();
+            const encodedParams = btoa(params);
+            window.location.href = `live.html?data=${encodedParams}`;
         }
     </script>
 </head>
 <body>
     <div class="container">
-        <form method="get" action="live.html">
+        <form onsubmit="event.preventDefault(); encodeFormToBase64();">
             <div class="form-group">
                 <label for="titulo">Page title</label>
-                <input type="text" id="titulo" name="titulo" required>
+                <input type="text" id="title" name="titulo" required>
             </div>
             <div class="form-group">
                 <label for="chat">Chat</label>
@@ -113,18 +119,15 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group" id="stream-urls">
-                <div class="form-group">
-                    <label for="name1">Name 1</label>
-                    <input type="text" id="name1" name="name1" required>
-                    <div class="inline-group">
-                        <label for="stream-url1">Stream URL 1</label>
-                        <input type="text" id="stream-url1" name="stream-url1" required>
-                        <label for="sandbox1">Sandbox</label>
-                        <input type="checkbox" id="sandbox1" name="sandbox1" checked>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="name1">Name 1</label>
+                <input type="text" id="name1" name="name1" required>
+                <label for="stream-url1">Stream URL 1</label>
+                <input type="text" id="stream-url1" name="stream-url1" required>
+                <label for="sandbox1">Sandbox</label>
+                <input type="checkbox" id="sandbox1" name="sandbox1" checked>
             </div>
+            <div class="form-group" id="stream-urls"></div>
             <button type="button" onclick="addStreamUrl()">Add more</button>
             <div class="form-group">
                 <label for="logo">Logo</label>
