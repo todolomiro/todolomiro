@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraping de Iframes</title>
+</head>
+<body>
+    <h1>Scraping de Iframes</h1>
+    <button id="download">Descargar data.json</button>
+    <script>
+        async function fetchPageContent(url) {
+            try {
+                const response = await fetch(`https://thingproxy.freeboard.io/fetch/${url}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.text();
+            } catch (error) {
+                console.error('Error fetching the page:', error);
+                return null;
+            }
+        }
+
+        async function extractIframeSrcs(url) {
+            const content = await fetchPageContent(url);
+            if (!content) return [];
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(content, 'text/html');
+            const iframes = doc.querySelectorAll('iframe');
+            return Array.from(iframes).map(iframe => iframe.src);
+        }
+
+        async function scrapeIframes() {
+            const mainUrl = 'https://todopelotatvhd.com/agenda.html';
+            const mainContent = await fetchPageContent(mainUrl);
+            if (!mainContent) return;
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(mainContent, 'text/html');
+            const links = doc.querySelectorAll('a');
+
+            const results = [];
+            
+            for (let link of links) {
+                const href = link.href;
+                if (href.startsWith('http')) {
+                    const iframeSrcs = await extractIframeSrcs(href);
+                    results.push({
+                        url: href,
+                        iframeSrcs: iframeSrcs
+                    });
+                }
+            }
+
+            // Crear y descargar el archivo JSON
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const urlBlob = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = urlBlob;
+            a.download = 'data.json';
+            a.click();
+            URL.revokeObjectURL(urlBlob);
+        }
+
+        document.getElementById('download').addEventListener('click', scrapeIframes);
+    </script>
+</body>
+</html>
