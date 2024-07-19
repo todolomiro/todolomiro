@@ -7,7 +7,8 @@
 </head>
 <body>
     <h1>Scraping de Iframes</h1>
-    <button id="download">Descargar data.json</button>
+    <button id="download-btn">Descargar JSON</button>
+    <div id="results"></div>
     <script>
         async function fetchPageContent(url) {
             try {
@@ -33,36 +34,48 @@
         async function scrapeIframes() {
             const mainUrl = 'https://todopelotatvhd.com/agenda.html';
             const mainContent = await fetchPageContent(mainUrl);
-            if (!mainContent) return;
+            if (!mainContent) return [];
 
             const parser = new DOMParser();
             const doc = parser.parseFromString(mainContent, 'text/html');
             const links = doc.querySelectorAll('a');
 
-            const results = [];
-            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            let allIframeSrcs = [];
+
             for (let link of links) {
                 const href = link.href;
                 if (href.startsWith('http')) {
                     const iframeSrcs = await extractIframeSrcs(href);
-                    results.push({
-                        url: href,
-                        iframeSrcs: iframeSrcs
-                    });
+                    allIframeSrcs = allIframeSrcs.concat(iframeSrcs);
                 }
             }
 
-            // Crear y descargar el archivo JSON
-            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
-            const urlBlob = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = urlBlob;
-            a.download = 'data.json';
-            a.click();
-            URL.revokeObjectURL(urlBlob);
+            allIframeSrcs.forEach(src => {
+                const p = document.createElement('p');
+                p.textContent = src;
+                resultsDiv.appendChild(p);
+            });
+
+            return allIframeSrcs;
         }
 
-        document.getElementById('download').addEventListener('click', scrapeIframes);
+        async function downloadJson() {
+            const iframeSrcs = await scrapeIframes();
+            const dataStr = JSON.stringify(iframeSrcs, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        document.getElementById('download-btn').addEventListener('click', downloadJson);
     </script>
 </body>
 </html>
